@@ -1,26 +1,24 @@
-const mongoose = require('mongoose');
 const express = require('express');
-
+const mongoose = require('mongoose');
+const bcrypt= require('bcrypt');
 
 const  clientSchema = new mongoose.Schema({
 name:{
    type:String,
    required:true 
 },
-phoneno:{
- type:Number,
-validator:{
-    Length:10
-}} ,
 email:{
     type:String,
     required:true
 },
-password:{
+createpassword:{
    type:String,      
-   required:true,
-   
-}   
+   required:true 
+} ,
+confirmpassword:{
+  type:String,      
+  required:true 
+}  
 })  
   //////////////////hashing a password/////////////////////
 clientSchema.pre('save',async function(next){
