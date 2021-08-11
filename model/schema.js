@@ -11,7 +11,7 @@ email:{
     type:String,
     required:true
 },
-createpassword:{
+password:{
    type:String,      
    required:true 
 } ,
