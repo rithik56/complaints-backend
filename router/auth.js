@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.post('/register',async(req,res)=>{
 
-   const{name,email,createpassword,confirmpassword}=req.body;
+   const { name, email, password } = req.body;
    if(!name || !email || !password){
       return res.status(400).json({error:"fill all the forms correctly"}) 
    } 
