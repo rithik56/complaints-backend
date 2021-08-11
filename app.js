@@ -10,7 +10,7 @@ dotenv.config({path:"./config.env"});
 require('./connection/conn');
 require('./model/schema');
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT ;
 
 const middleware = async(req,res,next)=>{
 console.log('hi i am middleware');

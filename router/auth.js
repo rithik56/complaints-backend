@@ -5,17 +5,19 @@ const router = express.Router()
 
 router.post('/register',async(req,res)=>{
 
-   const{name,email,phoneno,password}=req.body;
-   if(!name||!email||!phoneno||!password){
-      res.status(601).json({error:"fill all the forms correctly"}) 
+   const { name, email, password } = req.body;
+   if(!name || !email || !password){
+      return res.status(400).json({error:"fill all the forms correctly"}) 
    } 
    
    try {
-    const data= await mdata.findOne({phoneno:phoneno})
+    const data= await mdata.findOne({email:email})
 
     if(data){
-    return res.status(401).json({error:"user already registered"}) 
-    }
+      console.log("user registered already") 
+   return res.status(400).json({error:"user already registered"})  
+  
+}
 const fdata = new mdata(req.body);
 res.status(201).send("registration sucessfully");
 console .log(fdata);
@@ -27,5 +29,8 @@ console.log(err);
 
 
 })
+
+
+
 
 module.exports= router
