@@ -15,7 +15,7 @@ router.post('/register',async(req,res)=>{
 
     if(data){
       console.log("user registered already") 
-   return res.status(401).json({error:"user already registered"})  
+   return res.status(400).json({error:"user already registered"})  
   
 }
 const fdata = new mdata(req.body);
