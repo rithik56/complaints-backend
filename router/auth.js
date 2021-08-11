@@ -7,7 +7,7 @@ router.post('/register',async(req,res)=>{
 
    const{name,email,createpassword,confirmpassword}=req.body;
    if(!name||!email||!createpassword||!confirmpassword){
-      res.status(601).json({error:"fill all the forms correctly"}) 
+      return res.status(400).json({error:"fill all the forms correctly"}) 
    } 
    
    try {
