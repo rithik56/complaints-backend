@@ -15,10 +15,6 @@ password:{
    type:String,      
    required:true 
 } ,
-confirmpassword:{
-  type:String,      
-  required:true 
-}  
 })  
   //////////////////hashing a password/////////////////////
 clientSchema.pre('save',async function(next){
