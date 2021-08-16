@@ -14,11 +14,7 @@ email:{
 password:{
    type:String,      
    required:true 
-} ,
-messages:{
-  type:String,
-  required:true
-}
+} 
 })  
 //////////////////hashing a password/////////////////////
 clientSchema.pre('save',async function(next){
