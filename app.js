@@ -9,6 +9,7 @@ dotenv.config({path:"./config.env"});
 
 require('./connection/conn');
 require('./model/schema');
+require('./model/schema2');
 
 const PORT = process.env.PORT ;
 
