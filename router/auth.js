@@ -1,4 +1,3 @@
-
 const express = require("express");
 const mdata = require("../model/schema");
 const router = express.Router();
@@ -29,32 +28,36 @@ router.post("/register", async (req, res) => {
 });
 
 /////////////// sending users message from the contact us to mongodb /////////////////
- router.post('/contactus',async(req,res)=>{
+router.post("/contactus", async (req, res) => {
+  try {
+    const { name, email, issue } = req.body;
+    if (!name || !email || !issue) {
+      return res.status(401).json({ error: "fill all details properly" });
+    }
 
-try{
-const{name,email,issue}=req.body;
-if(!name||!email||!issue){
-return res.status(401).json({error:"fill all details properly"})   
-}
+    const username = await usdata.findOne({ email: email });
 
-const username = await usdata.findOne({email:email});
+    if (!username) {
+      const userdata = new usdata(req.body);
+      console.log(userdata);
+      await userdata.save();
+      res.status(201).send("your message has been stored once");
+    }
+    if (username) {
+      console.log(
+        "ur message has been sent once and message can be sent once only"
+      );
 
-if(!username){
-   const userdata= new usdata(req.body);
-   console.log(userdata);
-   await userdata.save();
-   res.status(201).send("your message has been stored once")  
-}
-if(username){
-   console.log('ur message has been sent once and message can be sent once only');
-   
-   res.status(400).send("ur message has been sent once and message can be sent once only"); 
-}
-}
-catch(err){
-console.log(err);
-}
-})
+      res
+        .status(400)
+        .send(
+          "ur message has been sent once and message can be sent once only"
+        );
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 router.post("/login", async (req, res) => {
   try {
@@ -71,7 +74,10 @@ router.post("/login", async (req, res) => {
       if (passwordMaches) {
         let token = jwt.sign(
           { email, timestamp: Date.now() },
-          process.env.JWT_SECRET
+          process.env.JWT_SECRET,
+          {
+            expiresIn: "7d",
+          }
         );
         res.status(200).json({ message: "Login successful", token });
       } else {
@@ -86,5 +92,25 @@ router.post("/login", async (req, res) => {
   }
 });
 
-module.exports = router;
+router.post("/verify", async (req, res) => {
+  let { token } = req.body;
 
+  if (!token) {
+    return res.status(400).json({ error: "Empty token was provided" });
+  }
+
+  try {
+    // this function actually returns a the decoded token.
+    // but here we do not needed.
+    jwt.verify(token, process.env.JWT_SECRET);
+
+    // here we can check if there is an email that matches the one provided
+    // in the token, or just allow access
+    res.status(200).json({ message: "authorized", authorized: true });
+  } catch (error) {
+    // the token is expired.
+    res.status(403).json({ error: "Expired token" });
+  }
+});
+
+module.exports = router;
