@@ -92,4 +92,25 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post("/verify", async (req, res) => {
+  let { token } = req.body;
+
+  if (!token) {
+    return res.status(400).json({ error: "Empty token was provided" });
+  }
+
+  try {
+    // this function actually returns a the decoded token.
+    // but here we do not needed.
+    jwt.verify(token, process.env.JWT_SECRET);
+
+    // here we can check if there is an email that matches the one provided
+    // in the token, or just allow access
+    res.status(200).json({ message: "authorized", authorized: true });
+  } catch (error) {
+    // the token is expired.
+    res.status(403).json({ error: "Expired token" });
+  }
+});
+
 module.exports = router;
