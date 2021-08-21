@@ -1,4 +1,3 @@
-
 const express = require("express");
 const mdata = require("../model/schema");
 const router = express.Router();
@@ -29,32 +28,38 @@ router.post("/register", async (req, res) => {
 });
 
 /////////////// sending users message from the contact us to mongodb /////////////////
- router.post('/contactus',async(req,res)=>{
+router.post("/contactus", async (req, res) => {
+  try {
+    const { name, email, issue } = req.body;
+    if (!name || !email || !issue) {
+      return res
+        .status(201)
+        .json({ message: "your message has been stored once" });
+    }
 
-try{
-const{name,email,issue}=req.body;
-if(!name||!email||!issue){
-return res.status(401).json({error:"fill all details properly"})   
-}
+    const username = await usdata.findOne({ email: email });
 
-const username = await usdata.findOne({email:email});
+    if (!username) {
+      const userdata = new usdata(req.body);
+      console.log(userdata);
+      await userdata.save();
+      res.status(201).send("your message has been stored once");
+    }
+    if (username) {
+      console.log(
+        "ur message has been sent once and message can be sent once only"
+      );
 
-if(!username){
-   const userdata= new usdata(req.body);
-   console.log(userdata);
-   await userdata.save();
-   res.status(201).send("your message has been stored once")  
-}
-if(username){
-   console.log('ur message has been sent once and message can be sent once only');
-   
-   res.status(400).send("ur message has been sent once and message can be sent once only"); 
-}
-}
-catch(err){
-console.log(err);
-}
-})
+      res
+        .status(400)
+        .send(
+          "ur message has been sent once and message can be sent once only"
+        );
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
 
 router.post("/login", async (req, res) => {
   try {
@@ -87,4 +92,3 @@ router.post("/login", async (req, res) => {
 });
 
 module.exports = router;
-
